@@ -25,7 +25,7 @@ Codename:	focal
 montimage@montimage-edge-1:~$ sudo add-apt-repository ppa:ettusresearch/uhd
 montimage@montimage-edge-1:~$ sudo apt-get install libuhd-dev uhd-host
 
-Test
+# Test
 montimage@montimage-edge-1:~$ sudo uhd_images_downloader 
 [INFO] Using base URL: https://files.ettus.com/binaries/cache/
 [INFO] Images destination: /usr/share/uhd/images
@@ -243,6 +243,7 @@ Reading state information... Done
 montimage@montimage-edge-1:~$ sudo apt-get install -y mongodb-org
 …
 montimage@montimage-edge-1:~$ sudo systemctl start mongod 
+```
 
 ### Open5Gs
 
