@@ -57,7 +57,7 @@ set HSS SQN value as: 192
 - 64-bit quad-core Cortex-A72 processor
 - username: `montimage`
 - hostname: `raspberry-pi`
-
+- Also work on Raspberry Pi 3, model B 1GB RAM (32bit)
 ### Setup
 
 - document: https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system
