@@ -1,0 +1,120 @@
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000000014 --isdn 00000014 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000984
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 208920100001984
+USIM MSISDN: 00000984
+USIM Service Provider Name: OpenCells984
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000984
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000014
+USIM MSISDN: 00000014
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 64
+set HSS SQN value as: 96
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000014984 --isdn 00014984 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000984
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000014
+USIM MSISDN: 00000014
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000984
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000014984
+USIM MSISDN: 00014984
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 96
+set HSS SQN value as: 128
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000014983 --isdn 00014983 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000983
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 999140000000003
+USIM MSISDN: 00000003
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000983
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000014983
+USIM MSISDN: 00014983
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 192
+set HSS SQN value as: 224
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000014980 --isdn 00014980 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000980
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 999140000000005
+USIM MSISDN: 00000005
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000980
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000014980
+USIM MSISDN: 00014980
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 96
+set HSS SQN value as: 128
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000014981 --isdn 00014981 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000981
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000001
+USIM MSISDN: 00000001
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000981
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000014981
+USIM MSISDN: 00014981
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 384
+set HSS SQN value as: 416
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000014982 --isdn 00014982 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000982
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000002
+USIM MSISDN: 00000002
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000982
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000014982
+USIM MSISDN: 00014982
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 448
+set HSS SQN value as: 480

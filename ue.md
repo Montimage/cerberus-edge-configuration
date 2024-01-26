@@ -188,6 +188,8 @@ OK
 - now you can use 5G connection
 ```bash
 ping -I usb0 montimage.com -c 5
+# or a simple speedtest
+# curl --interface usb0 --output /dev/null https://www.releases.ubuntu.com/focal/ubuntu-20.04.6-live-server-amd64.iso 
 ```
 
 ```bash
