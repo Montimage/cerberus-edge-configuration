@@ -1,7 +1,7 @@
 
 
-- MCC: 999
-- MNC: 14
+- MCC: 001
+- MNC: 01
 - MNC_LENGTH: 2
 - TAC: 7
 - KEY: 465B5CE8B199B49FAA5F0A2EE238A6BC
@@ -19,7 +19,7 @@ sudo ./program_uicc --adm 12345678 --imsi 001010000000001 --isdn 00000001 --acc 
 ```
 
 ```bash
-# example
+# Example
 cd hn/uicc-v3.2
 montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000000003 --isdn 00000003 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
 Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
@@ -41,7 +41,7 @@ USIM MSISDN: 00000003
 USIM Service Provider Name: MI
 Succeeded to authentify with SQN: 160
 set HSS SQN value as: 192
-
+```
 
 
 # Quectel RM502Q-AE
@@ -137,6 +137,7 @@ OK
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CFUN=1,1'
 AT+CFUN=1,1
 OK
+```
 
 - wait for few seconds (~30s), you should see a new NIC `usbX`:
 ```bash
