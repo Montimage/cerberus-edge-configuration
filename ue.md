@@ -3,11 +3,45 @@
 - MCC: 999
 - MNC: 14
 - MNC_LENGTH: 2
-- TAC: 1
-- KEY: 1102030405060708090a0b0c0d0e0f00
-- OP: bc2bce2a23be2fae32e4f1b4546004f7
+- TAC: 7
+- KEY: 465B5CE8B199B49FAA5F0A2EE238A6BC
+- OP: E8ED289DEBA952E4283B54E88E6183CA
 - USIM Type: OP
-- UE1: 999140000000001
+- UE1: 001010000000001
+
+# Setup SIM
+
+- use [uicc](https://open-cells.com/index.php/uiccsim-programing/) program
+
+```bash
+cd hn/uicc-v3.2
+sudo ./program_uicc --adm 12345678 --imsi 001010000000001 --isdn 00000001 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+```
+
+```bash
+# example
+cd hn/uicc-v3.2
+montimage@montimage-Precision-3570:~/hn/uicc-v3.2$ sudo ./program_uicc --adm 12345678 --imsi 001010000000003 --isdn 00000003 --acc 0001 --key 465B5CE8B199B49FAA5F0A2EE238A6BC --xx E8ED289DEBA952E4283B54E88E6183CA -spn "MI" --authenticate
+Computed OPc from OP and Ki as: 2e001f1df0a0bb769940a2c6342cf795
+
+Existing values in USIM
+ICCID: 89860061100000000983
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000003
+USIM MSISDN: 00000003
+USIM Service Provider Name: MI
+
+Setting new values
+
+Reading UICC values after uploading new values
+ICCID: 89860061100000000983
+WARNING: iccid luhn encoding of last digit not done 
+USIM IMSI: 001010000000003
+USIM MSISDN: 00000003
+USIM Service Provider Name: MI
+Succeeded to authentify with SQN: 160
+set HSS SQN value as: 192
+
 
 
 # Quectel RM502Q-AE
@@ -51,9 +85,14 @@ sudo apt purge modemmanager -y
 sudo apt install -y minicom python3-pip
 
 ```
-- Check USB driver of Quectel: `usb-devices`
+- Check USB driver of Quectel (note: need to *turn on* Quectel power switch) 
 ```bash
-$ usb-devices
+usb-devices
+```
+
+```bash
+# Example:
+montimage@raspberry-pi:~ $ usb-devices
 
 ...
 T:  Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=5000 MxCh= 0
@@ -81,25 +120,100 @@ pip install atcom
 - setup Quectel: [ref](https://docs.sixfab.com/page/5g-lte-cellular-connectivity)
 ```bash
 atcom --port /dev/ttyUSB2 'AT+QCFG="usbnet",1'
-atcom --port /dev/ttyUSB2 'AT+CGDCONT=1,"IPV4V6","internet"'
+atcom --port /dev/ttyUSB2 'AT+CGDCONT=1,"IPV4V6","srsapn"'
 atcom --port /dev/ttyUSB2 'AT+CFUN=1,1'
 ```
 
-Example:
 ```bash
+# Example:
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+QCFG="usbnet",1'
 AT+QCFG="usbnet",1
 OK
 
-montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGDCONT=1,"IPV4V6","internet"'
-AT+CGDCONT=1,"IPV4V6","internet"
+montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGDCONT=1,"IPV4V6","srsapn"'
+AT+CGDCONT=1,"IPV4V6","srsapn"
 OK
 
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CFUN=1,1'
 AT+CFUN=1,1
 OK
 
-# test status of connection
+- wait for few seconds (~30s), you should see a new NIC `usbX`:
+```bash
+montimage@raspberry-pi:~ $ ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.0.101  netmask 255.255.255.0  broadcast 192.168.0.255
+        inet6 2a05:6e02:10a3:7010:4388:ea41:cd6e:a83c  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::2365:978:4572:2035  prefixlen 64  scopeid 0x20<link>
+        ether b8:27:eb:80:b2:fe  txqueuelen 1000  (Ethernet)
+        RX packets 125  bytes 24854 (24.2 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 127  bytes 18886 (18.4 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 18  bytes 2162 (2.1 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 18  bytes 2162 (2.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+usb0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.225.25  netmask 255.255.255.0  broadcast 192.168.225.255
+        inet6 fe80::b6a0:d31b:9eb4:8e4a  prefixlen 64  scopeid 0x20<link>
+        ether 1a:51:c4:b9:39:a8  txqueuelen 1000  (Ethernet)
+        RX packets 17  bytes 1446 (1.4 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 36  bytes 4269 (4.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+
+- get UE connection status: 
+```
+atcom --port /dev/ttyUSB2 'AT+CGCONTRDP'
+```
+
+```bash
+# Example
+montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGCONTRDP'
+AT+CGCONTRDP
++CGCONTRDP: 1,0,srsapn,10.45.0.11,,8.8.8.8,8.8.4.4
+
+OK
+```
+
+- now you can use 5G connection
+```bash
+ping -I usb0 montimage.com -c 5
+```
+
+```bash
+# Example
+montimage@raspberry-pi:~ $ ping -I usb0 montimage.com -c 5
+PING montimage.com (217.70.184.55) from 192.168.225.25 usb0: 56(84) bytes of data.
+64 bytes from webredir.gandi.net (217.70.184.55): icmp_seq=1 ttl=54 time=28.3 ms
+64 bytes from webredir.gandi.net (217.70.184.55): icmp_seq=2 ttl=54 time=26.4 ms
+64 bytes from webredir.gandi.net (217.70.184.55): icmp_seq=3 ttl=54 time=25.5 ms
+64 bytes from webredir.gandi.net (217.70.184.55): icmp_seq=4 ttl=54 time=44.9 ms
+64 bytes from webredir.gandi.net (217.70.184.55): icmp_seq=5 ttl=54 time=41.5 ms
+
+--- montimage.com ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4007ms
+rtt min/avg/max/mdev = 25.482/33.312/44.891/8.178 ms
+```
+
+- If UE has no Internet, then you need to add a [route](https://github.com/Montimage/docker-compose-srsran-open5gs-mmt/tree/main/docker/open5gs#usage) in the Core's host machine to the UEs' IP range
+```bash
+sudo iptables -t nat -A POSTROUTING -o enp0s31f6 -j MASQUERADE
+sudo ip ro add 10.45.0.0/16 via 10.53.1.2
+```
+
+
+# TL;DR
+
+## test status of connection
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGDCONT?'
 
 RDY
