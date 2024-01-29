@@ -1,0 +1,18 @@
+# copy this file to: /etc/systemd/system/mi.service
+# then run: "sudo chmod +x /etc/systemd/system/mi.service"
+# 
+# to start: "sudo systemctl start mi"
+
+[Unit]
+Description=MI 5G services using Docker containers
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c "docker compose -f /home/montimage/docker-compose-srsran-open5gs-mmt/docker/docker-compose.yml up --detach && (iptables -t nat -A POSTROUTING -o eno1 -j MASQUERADE && ip ro add 10.45.0.0/16 via 10.53.1.2 || true)"
+ExecStop=/bin/bash -c "docker compose -f /home/montimage/docker-compose-srsran-open5gs-mmt/docker/docker-compose.yml stop"
+
+[Install]
+WantedBy=multi-user.target
