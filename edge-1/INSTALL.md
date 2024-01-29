@@ -13,7 +13,53 @@ Release:	20.04
 Codename:	focal
 ```
 
-# Install srsRAN + open5Gs
+# Docker compose of srsRAN+Open5GS+MMT
+
+Instead of using each component separately, MI integrated [MMT](https://github.com/Montimage/mmt-probe) inside the [compo](https://github.com/srsran/srsRAN_Project/tree/main/docker) srsRAN+Open5GS.
+The integration is available [here](https://github.com/Montimage/docker-compose-srsran-open5gs-mmt).
+
+#  Install Docker
+
+- document: https://docs.docker.com/engine/install/ubuntu/
+
+```bash
+# remove older versions if any
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+# Start the components
+
+```bash
+cd
+git clone https://github.com/Montimage/docker-compose-srsran-open5gs-mmt
+cd docker-compose-srsran-open5gs-mmt/docker/
+sudo docker compose up
+```
+
+# Setup route to Internet
+
+NIC to internet is `eno1`
+
+```bash
+sudo iptables -t nat -A POSTROUTING -o eno1 -j MASQUERADE
+sudo ip ro add 10.45.0.0/16 via 10.53.1.2
+```
+
+# TL;DR -- Install srsRAN + open5Gs
 - 08 January 2024 
 
 ## UHD driver:
