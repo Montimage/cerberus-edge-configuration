@@ -213,6 +213,14 @@ sudo iptables -t nat -A POSTROUTING -o enp0s31f6 -j MASQUERADE
 sudo ip ro add 10.45.0.0/16 via 10.53.1.2
 ```
 
+## Mobile UEs
+- To obtain IP address and connect to Internet, COTS UEs need to use `srsapn` as acces point name: 
+- add `Access Point Names`:
+   - Name: `srsapn`
+   - APN: `srsapn`
+
+
+
 
 # TL;DR
 
