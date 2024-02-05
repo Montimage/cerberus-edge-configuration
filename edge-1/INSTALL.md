@@ -44,9 +44,8 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 # Start the components
 
 ```bash
-cd
-git clone https://github.com/Montimage/docker-compose-srsran-open5gs-mmt
-cd docker-compose-srsran-open5gs-mmt/docker/
+# clone this repo, then
+cd docker/
 sudo docker compose up
 ```
 

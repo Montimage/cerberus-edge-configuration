@@ -1,0 +1,13 @@
+diff --git a/lib/gateways/sctp_network_gateway_impl.cpp b/lib/gateways/sctp_network_gateway_impl.cpp
+index 3294b4f..93bbf71 100644
+--- a/lib/gateways/sctp_network_gateway_impl.cpp
++++ b/lib/gateways/sctp_network_gateway_impl.cpp
+@@ -83,7 +83,7 @@
+ 
+   if (::setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &events, sizeof(events)) != 0) {
+     logger.error("Subscribing to SCTP events failed: {}", strerror(errno));
+-    return false;
++    return true;
+   }
+   return true;
+ }

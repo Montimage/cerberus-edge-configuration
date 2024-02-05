@@ -1,0 +1,251 @@
+#
+# Copyright 2021-2024 Software Radio Systems Limited
+#
+# This file is part of srsRAN
+#
+# srsRAN is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+#
+# srsRAN is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# A copy of the GNU Affero General Public License can be found in
+# the LICENSE file in the top-level directory of this distribution
+# and at http://www.gnu.org/licenses/.
+#
+
+version: '3.9'
+
+services:
+  core:
+    container_name: mi_core
+    image: mi/core
+    build:
+      context: open5gs
+      target: open5gs
+      args:
+        OS_VERSION: "22.04"
+        OPEN5GS_VERSION: "v2.6.6"
+    env_file:
+      - open5gs/open5gs.env
+    privileged: true
+    ports:
+      - 127.0.0.1:3000:3000/tcp
+    command: 5gc -c open5gs-5gc.yml
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z 127.0.0.20 7777" ]
+      interval: 3s
+      timeout: 1s
+      retries: 60
+    networks:
+      ran:
+        ipv4_address: 10.53.1.2
+
+  gnb:
+    container_name: mi_gnb
+    # Build info
+    image: mi/gnb
+    build:
+      context: srsran
+      dockerfile: Dockerfile
+      args:
+        OS_VERSION: 22.04
+    # privileged mode is requred only for accessing usb devices
+    privileged: true
+    # Extra capabilities always required
+    cap_add:
+      - SYS_NICE
+      - CAP_SYS_PTRACE
+    volumes:
+      # Access USB to use some SDRs
+      - /dev/bus/usb/:/dev/bus/usb/
+      # Sharing images between the host and the pod.
+      # It's also possible to download the images inside the pod
+      #- /usr/share/uhd/images:/usr/share/uhd/images
+      # Save logs and more into gnb-storage
+      - gnb-storage:/tmp
+    # It creates a file/folder into /config_name inside the container
+    # Its content would be the value of the file used to create the config
+    configs:
+      - gnb_config.yml
+    # Customize your desired network mode.
+    # current netowrk configuration creastes a private netwoek with both containers attached
+    # An alterantive would be `network: host"`. That would expose your host network into the container. It's the easiest to use if the 5gc is not in your PC
+    networks:
+      ran:
+        ipv4_address: 10.53.1.3
+      metrics:
+        ipv4_address: 172.19.1.3
+    # Start GNB container after 5gc is up and running
+    depends_on:
+      core:
+        condition: service_healthy
+    # Command to run into the final container
+    #command: gnb -c /gnb_config.yml amf --addr ${OPEN5GS_IP:-10.53.1.2} --bind_addr ${GNB_IP:-10.53.1.3}
+    command: gnb -c /gnb_config.yml amf --addr 10.53.1.2 --bind_addr 10.53.1.3 metrics --enable_json_metrics true --addr 172.19.1.4 --port 55555 cell_cfg --plmn 00101
+    #command: gnb -c /gnb_config.yml amf --addr ${OPEN5GS_IP:-10.53.1.2} --bind_addr ${GNB_IP:-10.53.1.3} metrics --enable_json_metrics true --addr 172.19.1.4 --port 55555 cell_cfg --plmn 99914
+    #command: sleep infinity
+
+  metrics-server:
+    container_name: mi_metrics
+    image: mi/metrics_server
+    build:
+      context: metrics_server
+    environment:
+      - PORT=${METRICS_SERVER_PORT}
+      - BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - TESTBED=default
+      - URL=http://${DOCKER_INFLUXDB_INIT_HOST}:${DOCKER_INFLUXDB_INIT_PORT}
+      - ORG=${DOCKER_INFLUXDB_INIT_ORG}
+      - TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+    #ports:
+    #  - 55555:${METRICS_SERVER_PORT}/udp
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.4
+
+  influxdb:
+    container_name: mi_influxdb
+    image: influxdb:${DOCKER_INFLUXDB_VERSION}
+    volumes:
+      - influxdb-storage:/var/lib/influxdb2:rw
+    env_file:
+      - .env
+    restart: on-failure:10
+    # Uncomment port section to access InfluxDB from outside the docker network
+    # ports:
+    #   - 8086:${DOCKER_INFLUXDB_INIT_PORT}
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.5
+
+  grafana:
+    container_name: mi_grafana
+    image: grafana/grafana-oss:${GRAFANA_VERSION}
+    volumes:
+      - grafana-storage:/var/lib/grafana:rw
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/etc/dashboards
+    env_file:
+      - .env
+    depends_on:
+      - influxdb
+      - metrics-server
+    ports:
+      - 127.0.0.1:3001:${GRAFANA_PORT}/tcp
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.6
+
+  probe:
+    container_name: mi_probe
+    image: ghcr.io/montimage/mmt-probe:v1.5.12
+    command: mmt-probe -i eth1 -Xsecurity.enable=true
+    #image: nicolaka/netshoot
+    #command: sleep infinity
+    #command: ifconfig -a
+
+    depends_on:
+      - gnb
+    network_mode: service:gnb #monitor gNB
+    #network_mode: service:operator #monitor 5G core
+    volumes:
+      - mmt-report-storage:/opt/mmt/probe/result/report/online/:rw
+    environment:
+      #allow max 100 InitialUEMessage during 1 millisecond
+      MMT_SEC_5G_DOS_NGAP_INITIALUEMESSAGE_MS_LIMIT: 100
+      #allow max 80 http2 requests having method == 131 or 130, or type == 8
+      MMT_SEC_5G_DOS_HTTP2_MS_LIMIT: 80
+  mongodb:
+    container_name: mi_db
+    image: mongo:4.4
+    #ports:
+    #  - 27017:27017
+    volumes:
+      - mongodb-storage:/data/db:rw
+    healthcheck:
+      test: [ "CMD-SHELL", "mongo" ]
+      interval: 10s
+      timeout: 1s
+      retries: 2
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.10
+
+  operator:
+    container_name: mi_operator
+    image: ghcr.io/montimage/mmt-operator:v1.7.6
+    command: /opt/mmt/operator/bin/www -Xdatabase_server.host=mongodb -Xport_number=8080 -Xprobe_analysis_mode=online
+    ports:
+      - 127.0.0.1:3002:8080/tcp #access to GUI from external via port 3002
+    # wait for mongodb is available
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    # shared volume between mmt-probe and mmt-operator to share CSV reports
+    volumes:
+      - mmt-report-storage:/opt/mmt/probe/result/report/online/:rw
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.11
+
+
+  maip-server:
+    container_name: mi_maip_server
+    image: mi/maip-server
+    build:
+      context: maip
+      dockerfile: Dockerfile.server
+    ports:
+      - 127.0.0.1:31057:31057/tcp
+    networks:
+      - maip_network
+
+  maip_client:
+    container_name: mi_maip_client
+    image: mi/maip-client
+    build:
+      context: maip
+      dockerfile: Dockerfile.client
+    ports:
+      - 127.0.0.1:3003:3000/tcp
+    networks:
+      - maip_network
+
+  tas:
+    container_name: mi_tas
+    image: mi/tas
+    build:
+      context: tas
+      dockerfile: Dockerfile
+    ports:
+      - 127.0.0.1:3004:31057/tcp
+
+configs:
+  gnb_config.yml:
+    file: ./srsran/gnb_rf_b200_tdd_n78_20mhz.yml # Path to your desired config file
+
+volumes:
+  gnb-storage:
+  grafana-storage:
+  influxdb-storage:
+  mongodb-storage:
+  mmt-report-storage:
+
+networks:
+  ran:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.53.1.0/24
+  metrics:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.1.0/24
+  maip_network:
+    driver: bridge

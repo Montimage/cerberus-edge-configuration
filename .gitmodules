@@ -1,0 +1,6 @@
+[submodule "docker/tas"]
+	path = docker/tas
+	url = git@bitbucket.org:montimage/test_and_simulation.git
+[submodule "docker/maip"]
+	path = docker/maip
+	url = https://github.com/Montimage/maip
