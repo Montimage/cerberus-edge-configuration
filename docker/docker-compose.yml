@@ -34,7 +34,7 @@ services:
       - open5gs/open5gs.env
     privileged: true
     ports:
-      - 127.0.0.1:3000:3000/tcp
+      - 127.0.0.1:3003:3000/tcp
     command: 5gc -c open5gs-5gc.yml
     healthcheck:
       test: [ "CMD-SHELL", "nc -z 127.0.0.20 7777" ]
@@ -212,7 +212,7 @@ services:
       context: maip
       dockerfile: Dockerfile.client
     ports:
-      - 127.0.0.1:3003:3000/tcp
+      - 127.0.0.1:3000:3000/tcp
     networks:
       - maip_network
 

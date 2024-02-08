@@ -70,8 +70,15 @@ However, any service declared in the docker-compose.yml can be started standalon
 This section describes the services which expose Web GUI so that you can access.
 The services are binded to `127.0.0.1` by default for security reason. Thus if you need to access to them remotely, either using SSH port forwarding or update the IPs in [docker-compose.yml](docker-compose.yml) file.
 
+For example, if the server is available at `192.168.0.122`, then you need to SSH to it:
+
+```bash
+# do not forget to replace your server IP
+ssh -L3000:localhost:3000 -L3001:localhost:3001  -L3002:localhost:3002  -L3003:localhost:3003  -L3004:localhost:3004  -L31057:localhost:31057 montimage@192.168.0.122
+```
+
 ## Open5GS
-- expose port: `3000`, e.g., http://localhost:3000
+- expose port: `3003`, e.g., http://localhost:3000
 - username/password: `admin`/`1423`
 - document: https://open5gs.org/open5gs/docs/guide/01-quickstart/ (Section 3)
 
@@ -85,7 +92,7 @@ The services are binded to `127.0.0.1` by default for security reason. Thus if y
 - document: https://github.com/Montimage/mmt-operator
 
 ## MAIP
-- expose port: `3003`, e.g., http://localhost:3003
+- expose port: `3000`, e.g., http://localhost:3003
 - document: https://github.com/montimage/maip
 
 ## TaS
