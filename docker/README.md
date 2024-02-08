@@ -78,7 +78,7 @@ ssh -L3000:localhost:3000 -L3001:localhost:3001  -L3002:localhost:3002  -L3003:l
 ```
 
 ## Open5GS
-- expose port: `3003`, e.g., http://localhost:3000
+- expose port: `3003`, e.g., http://localhost:3003
 - username/password: `admin`/`1423`
 - document: https://open5gs.org/open5gs/docs/guide/01-quickstart/ (Section 3)
 
@@ -92,7 +92,7 @@ ssh -L3000:localhost:3000 -L3001:localhost:3001  -L3002:localhost:3002  -L3003:l
 - document: https://github.com/Montimage/mmt-operator
 
 ## MAIP
-- expose port: `3000`, e.g., http://localhost:3003
+- expose port: `3000`, e.g., http://localhost:3000
 - document: https://github.com/montimage/maip
 
 ## TaS
