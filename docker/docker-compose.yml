@@ -110,7 +110,7 @@ services:
 
   influxdb:
     container_name: mi_influxdb
-    image: influxdb:1.8.10
+    image: influxdb:2.7
     volumes:
       - influxdb-storage:/var/lib/influxdb2:rw
     env_file:
