@@ -33,6 +33,7 @@ services:
     env_file:
       - open5gs/open5gs.env
     privileged: true
+    restart: unless-stopped
     ports:
       - 127.0.0.1:3003:3000/tcp
     command: 5gc -c open5gs-5gc.yml
@@ -56,6 +57,7 @@ services:
         OS_VERSION: 22.04
     # privileged mode is requred only for accessing usb devices
     privileged: true
+    restart: unless-stopped
     # Extra capabilities always required
     cap_add:
       - SYS_NICE
@@ -93,6 +95,7 @@ services:
   metrics-server:
     container_name: mi_metrics
     image: mi/metrics_server
+    restart: unless-stopped
     build:
       context: metrics_server
     environment:
@@ -111,6 +114,7 @@ services:
   influxdb:
     container_name: mi_influxdb
     image: influxdb:2.7
+    restart: unless-stopped
     volumes:
       - influxdb-storage:/var/lib/influxdb2:rw
     env_file:
@@ -126,6 +130,7 @@ services:
   grafana:
     container_name: mi_grafana
     image: grafana/grafana-oss:${GRAFANA_VERSION}
+    restart: unless-stopped
     volumes:
       - grafana-storage:/var/lib/grafana:rw
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -144,6 +149,7 @@ services:
   probe:
     container_name: mi_probe
     image: ghcr.io/montimage/mmt-probe:v1.5.12
+    restart: unless-stopped
     command: mmt-probe -i eth1 -Xsecurity.enable=true
     #image: nicolaka/netshoot
     #command: sleep infinity
@@ -163,6 +169,7 @@ services:
   mongodb:
     container_name: mi_db
     image: mongo:4.4
+    restart: unless-stopped
     #ports:
     #  - 27017:27017
     volumes:
@@ -179,6 +186,7 @@ services:
   operator:
     container_name: mi_operator
     image: ghcr.io/montimage/mmt-operator:v1.7.6
+    restart: unless-stopped
     command: /opt/mmt/operator/bin/www -Xdatabase_server.host=mongodb -Xport_number=8080 -Xprobe_analysis_mode=online
     ports:
       - 127.0.0.1:3002:8080/tcp #access to GUI from external via port 3002
@@ -197,6 +205,7 @@ services:
   maip-server:
     container_name: mi_maip_server
     image: mi/maip-server
+    restart: unless-stopped
     build:
       context: maip
       dockerfile: Dockerfile.server
@@ -208,6 +217,7 @@ services:
   maip_client:
     container_name: mi_maip_client
     image: mi/maip-client
+    restart: unless-stopped
     build:
       context: maip
       dockerfile: Dockerfile.client
@@ -219,6 +229,7 @@ services:
   tas:
     container_name: mi_tas
     image: mi/tas
+    restart: unless-stopped
     build:
       context: tas
       dockerfile: Dockerfile
