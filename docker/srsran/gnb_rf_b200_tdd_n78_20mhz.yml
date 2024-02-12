@@ -20,7 +20,7 @@ cell_cfg:
   band: 78                                                        # The NR band.
   channel_bandwidth_MHz: 20                                       # Bandwith in MHz. Number of PRBs will be automatically derived.
   common_scs: 30                                                  # Subcarrier spacing in kHz used for data.
-  plmn: "99914"                                                   # PLMN broadcasted by the gNB.
+  plmn: "00101"                                                   # PLMN broadcasted by the gNB.
   tac: 7                                                          # Tracking area code (needs to match the core configuration).
   pci: 1                                                          # Physical cell ID.
 
