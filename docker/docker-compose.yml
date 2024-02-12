@@ -119,7 +119,6 @@ services:
       - influxdb-storage:/var/lib/influxdb2:rw
     env_file:
       - .env
-    restart: on-failure:10
     # Uncomment port section to access InfluxDB from outside the docker network
     # ports:
     #   - 8086:${DOCKER_INFLUXDB_INIT_PORT}
