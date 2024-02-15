@@ -234,6 +234,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 127.0.0.1:3004:31057/tcp
+    networks:
+      metrics:
+        ipv4_address: 172.19.1.12
 
 configs:
   gnb_config.yml:
