@@ -1,6 +1,3 @@
-[submodule "docker/tas"]
-	path = docker/tas
-	url = https://github.com/Montimage/tas
 [submodule "docker/maip"]
 	path = docker/maip
 	url = https://github.com/Montimage/maip
