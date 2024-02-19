@@ -230,7 +230,7 @@ services:
     image: ghcr.io/montimage/tas:v1.0.3
     restart: unless-stopped
     ports:
-      - 127.0.0.1:3004:31057/tcp
+      - 127.0.0.1:3004:3004/tcp
     networks:
       metrics:
         ipv4_address: 172.19.1.12
