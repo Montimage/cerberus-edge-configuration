@@ -33,6 +33,11 @@ RUN git clone https://github.com/srsran/srsRAN_Project.git /src
 # fixed in the version we are testing 05 Feb 2024
 RUN cd src && git checkout 0b2702cca094a2a1d8f2d25d482172d2aa00d454
 
+# fix error when running in Supermicro by applying some patch
+WORKDIR /src
+ADD ./patch .
+RUN git apply *.patch && git status && git diff
+
 # Install build dependencies, and also ZMQ and UHD libraries
 RUN /src/.gitlab/ci/builders/install_dependencies.sh
 

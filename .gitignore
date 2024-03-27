@@ -1,3 +1,4 @@
 /.project
 /rsync.sh
 /.externalToolBuilders/
+.DS_Store
