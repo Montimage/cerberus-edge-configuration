@@ -226,6 +226,7 @@ sudo ip ro add 10.45.0.0/16 via 10.53.1.2
 
 
 # TL;DR
+(The commands below are to debug)
 
 ## test status of connection
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGDCONT?'
