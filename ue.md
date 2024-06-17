@@ -126,20 +126,23 @@ atcom --port /dev/ttyUSB2 'AT+CFUN=1,1'
 
 ```bash
 # Example:
+# Enable USB NIC
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+QCFG="usbnet",1'
 AT+QCFG="usbnet",1
 OK
 
+# Set only your APN to connect the device to network
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CGDCONT=1,"IPV4V6","srsapn"'
 AT+CGDCONT=1,"IPV4V6","srsapn"
 OK
 
+# Reset the modem
 montimage@raspberry-pi:~ $ atcom --port /dev/ttyUSB2 'AT+CFUN=1,1'
 AT+CFUN=1,1
 OK
 ```
 
-- wait for few seconds (~30s), you should see a new NIC `usbX`:
+- Wait a few minutes for the modem to fully function and a few minutes for network registration, you should see a new NIC `usbX`:
 ```bash
 montimage@raspberry-pi:~ $ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
